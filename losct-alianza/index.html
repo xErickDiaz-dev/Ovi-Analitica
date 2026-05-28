@@ -55,25 +55,35 @@ img{display:block}
 .hero-stat-num{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1;color:var(--acc1)}
 .hero-stat-lbl{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:6px}
 
-/* HERO RIGHT — LEDGER */
-.hero-right{position:relative;overflow:hidden;background:linear-gradient(160deg,#2a1414,#0a0a0a);display:flex;flex-direction:column;justify-content:center;padding:50px 38px}
-.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 22%);pointer-events:none}
-.ledger{position:relative;z-index:2;display:flex;flex-direction:column;gap:6px}
-.ledger-card{border:1px solid var(--line);padding:26px 24px;background:rgba(10,10,10,.4)}
-.ledger-card.us{border-color:rgba(255,34,48,.5);background:rgba(255,34,48,.08)}
-.ledger-lbl{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
-.ledger-card.us .ledger-lbl{color:var(--acc1)}
-.ledger-val{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:2.4rem;line-height:.9;margin:8px 0 10px}
-.ledger-card.us .ledger-val{color:var(--acc1)}
-.ledger-meta{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink-dim);letter-spacing:.05em}
-.ledger-vs{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;font-size:1.1rem;color:var(--ink-dim);text-align:center;padding:4px 0}
+/* HERO RIGHT — PHOTO */
+.hero-right{position:relative;overflow:hidden;background:linear-gradient(160deg,#2a1414,#0a0a0a)}
+.hero-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%;filter:saturate(1.05) contrast(1.08);z-index:0}
+.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 24%,transparent 72%,rgba(0,0,0,.45) 100%);pointer-events:none;z-index:1}
+.hero-right::before{content:"";position:absolute;bottom:0;left:0;right:0;height:42%;background:linear-gradient(transparent,var(--bg));z-index:1;pointer-events:none}
+.hero-portrait-cap{position:absolute;left:0;right:0;bottom:34px;padding:0 38px;z-index:2}
+.hpc-name{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2rem,3vw,2.8rem);line-height:.88;color:var(--ink)}
+.hpc-sub{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc2-deep);margin-top:8px}
 @media (max-width:900px){
   .hero-split{grid-template-columns:1fr}
-  .hero-right{min-height:auto;padding:40px 22px;order:1}
-  .hero-right::after{display:none}
+  .hero-right{min-height:54vh;order:-1}
+  .hero-portrait{object-position:center 22%}
+  .hero-right::after{background:linear-gradient(transparent,var(--bg))}
   .hero-left{padding:40px 22px 36px}
   .hero-stats{gap:24px}
 }
+
+/* LEDGER BAND (VS) */
+.ledger-band{max-width:1400px;margin:0 auto;padding:64px 28px}
+.lb-inner{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:center}
+.lb-card{border:1px solid var(--line);padding:32px 30px}
+.lb-card.us{border-color:rgba(255,34,48,.5);background:rgba(255,34,48,.06)}
+.lb-lbl{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+.lb-card.us .lb-lbl{color:var(--acc1)}
+.lb-val{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.2rem,4vw,3.2rem);line-height:.9;margin:10px 0 12px}
+.lb-card.us .lb-val{color:var(--acc1)}
+.lb-meta{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--ink-dim);letter-spacing:.05em}
+.lb-vs{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;font-size:2rem;color:var(--ink-dim)}
+@media (max-width:780px){.lb-inner{grid-template-columns:1fr;gap:12px}.lb-vs{padding:4px 0;text-align:center}}
 
 /* MARQUEE */
 .marquee{overflow:hidden;white-space:nowrap;padding:14px 0;border-top:1px solid rgba(0,0,0,.2);border-bottom:1px solid rgba(0,0,0,.2)}
@@ -299,18 +309,10 @@ img{display:block}
       </div>
     </div>
     <div class="hero-right r-scale">
-      <div class="ledger">
-        <div class="ledger-card them">
-          <div class="ledger-lbl">Equipo Compa Primo</div>
-          <div class="ledger-val">La canción</div>
-          <div class="ledger-meta">17 días de campaña · 1 release</div>
-        </div>
-        <div class="ledger-vs">VS</div>
-        <div class="ledger-card us">
-          <div class="ledger-lbl">LPP Media Influence</div>
-          <div class="ledger-val">La marca</div>
-          <div class="ledger-meta">365 días · todo el artista</div>
-        </div>
+      <img class="hero-portrait" src="https://i.scdn.co/image/ab6761610000e5eb8c25cd9484906de92f0b2e1b" alt="Nueva H — Brayan y Brandon" onerror="this.onerror=null;this.src='https://i.scdn.co/image/ab6761610000101f8c25cd9484906de92f0b2e1b'">
+      <div class="hero-portrait-cap">
+        <div class="hpc-name">Nueva H</div>
+        <div class="hpc-sub">Brayan · Brandon — el dúo detrás de Compa Primo</div>
       </div>
     </div>
   </div>
@@ -323,6 +325,23 @@ img{display:block}
     <b>USTEDES LANZAN LA CANCIÓN</b><span>·</span>NOSOTROS CONSTRUIMOS LA MARCA<span>·</span>DOS OPERACIONES<span>·</span>UN MISMO ROSTER<span>·</span>
   </div>
 </div>
+
+<!-- 02.5 LEDGER BAND (VS) -->
+<section class="ledger-band">
+  <div class="lb-inner r">
+    <div class="lb-card them">
+      <div class="lb-lbl">Equipo Compa Primo</div>
+      <div class="lb-val">La canción</div>
+      <div class="lb-meta">17 días de campaña · 1 release</div>
+    </div>
+    <div class="lb-vs">VS</div>
+    <div class="lb-card us">
+      <div class="lb-lbl">LPP Media Influence</div>
+      <div class="lb-val">La marca</div>
+      <div class="lb-meta">365 días · todo el artista</div>
+    </div>
+  </div>
+</section>
 
 <!-- 03 EL CONTEXTO -->
 <section class="sec">
