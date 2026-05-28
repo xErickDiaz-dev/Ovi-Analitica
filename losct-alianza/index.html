@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LPP × Los CT — La Capa Que Falta · Propuesta de Alianza</title>
+<meta name="description" content="LPP Media Influence — Propuesta de alianza para Los CT Records. Ustedes operan las canciones, nosotros operamos las marcas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;800;900&family=IBM+Plex+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;   --bg-elev:#16100f;  --bg-card:#1a1212;
+  --ink:#fff4d6;  --ink-dim:#a89580;  --line:rgba(255,244,214,.08);
+  --acc1:#ff2230; --acc1-deep:#c41420;
+  --acc2:#fff4d6; --acc2-deep:#e8d4a8;
+  --alert:#ff8800;
+  --ok:#7dff7d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font-family:"Space Grotesk",sans-serif;font-weight:300;line-height:1.45;overflow-x:hidden}
+img{display:block}
+
+/* TYPE HELPERS */
+.t-display{font-family:"Big Shoulders Display",sans-serif;font-weight:900;line-height:.88;letter-spacing:-.015em;text-transform:uppercase}
+.t-display-italic{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;line-height:.85;letter-spacing:-.02em;text-transform:uppercase}
+.t-mono{font-family:"IBM Plex Mono",monospace;font-weight:500;letter-spacing:.01em}
+.t-label{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim)}
+
+/* REVEAL */
+.r,.r-scale{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.r{transform:translateY(40px)}
+.r-scale{transform:scale(1.04)}
+.r.in,.r-scale.in{opacity:1;transform:none}
+
+/* TOP BAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;justify-content:space-between;align-items:center;padding:16px 28px;mix-blend-mode:difference;pointer-events:none}
+.topbar .t-label{color:#fff}
+.pulse{display:inline-flex;align-items:center;gap:8px}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--acc1);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:grid;grid-template-rows:auto 1fr;padding-top:80px;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,244,214,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,244,214,.025) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0}
+.hero-split{position:relative;z-index:1;display:grid;grid-template-columns:1.5fr 1fr;gap:0;min-height:calc(100vh - 80px)}
+.hero-left{padding:60px 40px 60px 28px;display:flex;flex-direction:column;justify-content:flex-end;gap:28px}
+.hero-tag-block{display:inline-block;align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bg);background:var(--acc1);padding:8px 14px}
+.hero-name{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;line-height:.8;letter-spacing:-.035em;text-transform:uppercase;font-size:clamp(3.6rem,8.5vw,9rem);color:var(--ink)}
+.hero-name .lit{color:var(--acc1)}
+.hero-thesis{max-width:52ch;font-size:clamp(1rem,1.3vw,1.18rem);color:var(--ink-dim);font-weight:300;line-height:1.6}
+.hero-thesis b{color:var(--ink);font-weight:500}
+.hero-stats{display:flex;flex-wrap:wrap;gap:34px;margin-top:4px}
+.hero-stat-num{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1;color:var(--acc1)}
+.hero-stat-lbl{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:6px}
+
+/* HERO RIGHT — LEDGER */
+.hero-right{position:relative;overflow:hidden;background:linear-gradient(160deg,#2a1414,#0a0a0a);display:flex;flex-direction:column;justify-content:center;padding:50px 38px}
+.hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 22%);pointer-events:none}
+.ledger{position:relative;z-index:2;display:flex;flex-direction:column;gap:6px}
+.ledger-card{border:1px solid var(--line);padding:26px 24px;background:rgba(10,10,10,.4)}
+.ledger-card.us{border-color:rgba(255,34,48,.5);background:rgba(255,34,48,.08)}
+.ledger-lbl{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+.ledger-card.us .ledger-lbl{color:var(--acc1)}
+.ledger-val{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:2.4rem;line-height:.9;margin:8px 0 10px}
+.ledger-card.us .ledger-val{color:var(--acc1)}
+.ledger-meta{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink-dim);letter-spacing:.05em}
+.ledger-vs{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;font-size:1.1rem;color:var(--ink-dim);text-align:center;padding:4px 0}
+@media (max-width:900px){
+  .hero-split{grid-template-columns:1fr}
+  .hero-right{min-height:auto;padding:40px 22px;order:1}
+  .hero-right::after{display:none}
+  .hero-left{padding:40px 22px 36px}
+  .hero-stats{gap:24px}
+}
+
+/* MARQUEE */
+.marquee{overflow:hidden;white-space:nowrap;padding:14px 0;border-top:1px solid rgba(0,0,0,.2);border-bottom:1px solid rgba(0,0,0,.2)}
+.marquee.acc1{background:var(--acc1)}
+.marquee.acc1 .mq-track{color:var(--bg)}
+.marquee.acc2{background:var(--acc2)}
+.marquee.acc2 .mq-track{color:var(--bg)}
+.mq-track{display:inline-block;font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;font-size:1.5rem;letter-spacing:.02em;text-transform:uppercase;animation:scroll 40s linear infinite}
+.mq-track span{margin:0 12px;opacity:.55}
+.mq-track b{font-weight:900;opacity:1}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION SHELL */
+.sec{max-width:1400px;margin:0 auto;padding:90px 28px}
+.sec.elev{max-width:none;background:var(--bg-elev)}
+.sec.elev .sec-inner{max-width:1400px;margin:0 auto}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:48px;flex-wrap:wrap}
+.sec-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:.8rem;letter-spacing:.2em;color:var(--acc1)}
+.sec-title{font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(2rem,4vw,3.2rem);line-height:.9;letter-spacing:-.02em}
+.sec-title i{color:var(--acc1);font-style:italic}
+.sec-intro{max-width:74ch;font-size:1.04rem;color:var(--ink-dim);line-height:1.7;margin-bottom:44px}
+.sec-intro b{color:var(--ink);font-weight:500}
+
+/* NUMBERS */
+.numbers{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.num-cell{padding:38px 26px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);transition:background .3s}
+.num-cell:first-child{border-left:1px solid var(--line)}
+.num-cell:hover{background:var(--bg-elev)}
+.num-big{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:clamp(2.6rem,5vw,4.4rem);line-height:.9;color:var(--ink)}
+.num-big .u{color:var(--acc1)}
+.num-lbl{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-top:12px}
+.num-sub{font-size:.82rem;color:var(--ink-dim);margin-top:8px;line-height:1.4}
+@media (max-width:780px){.numbers{grid-template-columns:1fr 1fr}.num-cell:nth-child(odd){border-left:1px solid var(--line)}}
+
+/* DIAGNOSTIC */
+.diag{display:grid;grid-template-columns:5fr 7fr;gap:54px;align-items:start}
+.diag-big{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:.95;letter-spacing:-.02em}
+.diag-big .a1{color:var(--acc1)}
+.diag-big .a2{color:var(--acc2-deep)}
+.diag-body p{color:var(--ink-dim);font-size:1.04rem;line-height:1.7;margin-bottom:20px}
+.diag-body em{color:var(--acc1);font-style:normal;font-weight:500}
+.diag-body b{color:var(--ink);font-weight:500}
+@media (max-width:880px){.diag{grid-template-columns:1fr;gap:30px}}
+
+/* TWO OPERATIONS (strengths/weaknesses base) */
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sw-col{padding:36px 30px}
+.sw-them{background:rgba(255,244,214,.04);border:1px solid rgba(255,244,214,.14)}
+.sw-us{background:rgba(255,34,48,.07);border:1px solid rgba(255,34,48,.3)}
+.sw-kicker{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px}
+.sw-us .sw-kicker{color:var(--acc1)}
+.sw-head{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:2rem;margin-bottom:24px;line-height:.9}
+.sw-them .sw-head{color:var(--acc2-deep)}
+.sw-us .sw-head{color:var(--acc1)}
+.sw-item{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line);font-size:.95rem;color:var(--ink-dim);line-height:1.5}
+.sw-item:last-child{border-bottom:0}
+.sw-item .g{font-family:"Big Shoulders Display",sans-serif;font-weight:900;flex-shrink:0;font-size:1.2rem;line-height:1.3}
+.sw-them .sw-item .g{color:var(--acc2-deep)}
+.sw-us .sw-item .g{color:var(--acc1)}
+.sw-item b{color:var(--ink);font-weight:500;display:block;margin-bottom:3px}
+@media (max-width:780px){.sw{grid-template-columns:1fr}}
+
+/* BANNER CALLOUT */
+.banner{margin-top:18px;padding:34px 32px;background:linear-gradient(120deg,rgba(255,34,48,.14),rgba(255,34,48,.02));border:1px solid rgba(255,34,48,.3)}
+.banner-kicker{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--acc1);margin-bottom:12px}
+.banner-text{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:clamp(1.5rem,3vw,2.4rem);line-height:1;letter-spacing:-.01em}
+.banner-text .lit{color:var(--acc1)}
+
+/* PILLARS */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.pillar{padding:34px 26px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);transition:background .3s}
+.pillar:hover{background:var(--bg-elev)}
+.pillar-num{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:3rem;line-height:.8;color:var(--acc1)}
+.pillar-title{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.3rem;margin:18px 0 12px;line-height:.95}
+.pillar-body{font-size:.9rem;color:var(--ink-dim);line-height:1.55}
+.pillar-tag{font-family:"IBM Plex Mono",monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2-deep);margin-top:16px}
+@media (max-width:880px){.pillars{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.pillars{grid-template-columns:1fr}}
+
+/* FLOW (Fan-as-Lead) */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line)}
+.flow-step{position:relative;padding:34px 22px;border-right:1px solid var(--line);transition:background .3s}
+.flow-step:last-child{border-right:0}
+.flow-step:hover{background:var(--bg-card)}
+.flow-step.hot{background:rgba(255,34,48,.08)}
+.flow-step.hot:hover{background:rgba(255,34,48,.12)}
+.flow-n{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.16em;color:var(--acc1);margin-bottom:18px}
+.flow-title{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.7rem;line-height:.9;margin-bottom:12px}
+.flow-body{font-size:.82rem;color:var(--ink-dim);line-height:1.5}
+.flow-arrow{position:absolute;right:-9px;top:46px;width:16px;height:16px;border-top:2px solid var(--acc1);border-right:2px solid var(--acc1);transform:rotate(45deg);background:var(--bg);z-index:3}
+.flow-step:last-child .flow-arrow{display:none}
+.flow-note{margin-top:16px;padding:26px 30px;background:rgba(125,255,125,.05);border-left:3px solid var(--ok)}
+.flow-note b{color:var(--ok);font-weight:500}
+.flow-note p{color:var(--ink-dim);font-size:.96rem;line-height:1.65}
+@media (max-width:880px){
+  .flow{grid-template-columns:1fr 1fr}
+  .flow-step{border-bottom:1px solid var(--line)}
+  .flow-arrow{display:none!important}
+}
+@media (max-width:480px){.flow{grid-template-columns:1fr}}
+
+/* COACHING */
+.coach{display:grid;grid-template-columns:6fr 5fr;gap:54px;align-items:start}
+.coach-big{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:clamp(1.9rem,3.6vw,2.8rem);line-height:.98;letter-spacing:-.02em;margin-bottom:26px}
+.coach-big .lit{color:var(--acc1)}
+.coach-body p{color:var(--ink-dim);font-size:1.02rem;line-height:1.7;margin-bottom:18px}
+.coach-body b{color:var(--ink);font-weight:500}
+.coach-list{border:1px solid var(--line);padding:32px 28px;background:var(--bg-card)}
+.coach-list-head{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc1);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.coach-list ul{list-style:none}
+.coach-list li{display:flex;gap:12px;padding:11px 0;font-size:.92rem;color:var(--ink);line-height:1.45;border-bottom:1px solid var(--line)}
+.coach-list li:last-child{border-bottom:0}
+.coach-list li::before{content:"→";color:var(--acc1);flex-shrink:0;font-weight:700}
+@media (max-width:880px){.coach{grid-template-columns:1fr;gap:30px}}
+
+/* ROSTER */
+.roster{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.roster-card{border:1px solid var(--line);padding:32px 28px;transition:border-color .3s,background .3s}
+.roster-card:hover{border-color:var(--acc1);background:var(--bg-card)}
+.roster-name{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:2.2rem;line-height:.9;color:var(--acc1)}
+.roster-tag{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin:8px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.roster-stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.roster-stats span{font-family:"IBM Plex Mono",monospace;font-size:.64rem;padding:5px 10px;border:1px solid var(--line);color:var(--acc2-deep);letter-spacing:.04em}
+.roster-desc{font-size:.9rem;color:var(--ink-dim);line-height:1.55}
+@media (max-width:880px){.roster{grid-template-columns:1fr}}
+
+/* ROADMAP */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.phase{padding:38px 28px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.phase-num{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:clamp(4rem,8vw,7rem);line-height:.75;color:var(--acc1)}
+.phase-title{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.5rem;margin:14px 0 8px}
+.phase-window{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:20px}
+.phase-list{list-style:none}
+.phase-list li{display:flex;gap:10px;padding:9px 0;font-size:.9rem;color:var(--ink-dim);line-height:1.5;border-bottom:1px solid var(--line)}
+.phase-list li:last-child{border-bottom:0}
+.phase-list li::before{content:"→";color:var(--acc1);flex-shrink:0;font-weight:700}
+@media (max-width:880px){.roadmap{grid-template-columns:1fr}}
+
+/* PRICING — 3 TIERS */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+.tier{border:1px solid var(--line);padding:38px 30px;display:flex;flex-direction:column;background:var(--bg-card)}
+.tier.feat{background:var(--acc1);color:#000;border-color:var(--acc1);position:relative}
+.tier-badge{position:absolute;top:-1px;right:-1px;background:#000;color:var(--acc1);font-family:"IBM Plex Mono",monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;padding:7px 12px;font-weight:700}
+.tier-lvl{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--acc1)}
+.tier.feat .tier-lvl{color:rgba(0,0,0,.7)}
+.tier-name{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:2.4rem;line-height:.9;margin:10px 0 6px}
+.tier-sub{font-size:.86rem;color:var(--ink-dim);line-height:1.5;margin-bottom:26px;min-height:3.2em}
+.tier.feat .tier-sub{color:rgba(0,0,0,.72)}
+.tier-amt{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:4rem;line-height:.8;letter-spacing:-.03em;display:flex;align-items:flex-start;gap:4px}
+.tier-amt .pre{font-size:.45em;margin-top:.3em}
+.tier-amt .per{font-family:"IBM Plex Mono",monospace;font-size:.18em;font-weight:500;align-self:flex-end;margin-bottom:.7em;letter-spacing:.02em;color:var(--ink-dim)}
+.tier.feat .tier-amt .per{color:rgba(0,0,0,.6)}
+.tier-inc{list-style:none;margin:28px 0 30px;flex-grow:1}
+.tier-inc li{display:flex;gap:11px;padding:10px 0;font-size:.88rem;line-height:1.45;border-bottom:1px solid var(--line)}
+.tier.feat .tier-inc li{border-bottom:1px solid rgba(0,0,0,.18)}
+.tier-inc li:last-child{border-bottom:0}
+.tier-inc li .p{font-family:"Big Shoulders Display",sans-serif;font-weight:900;color:var(--acc1);flex-shrink:0;font-size:1.05rem;line-height:1.3}
+.tier.feat .tier-inc li .p{color:#000}
+.tier-cta{display:block;text-align:center;padding:16px;font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;font-size:1.15rem;text-decoration:none;letter-spacing:.01em;transition:transform .3s;background:var(--ink);color:var(--bg)}
+.tier.feat .tier-cta{background:#000;color:var(--acc1)}
+.tier-cta:hover{transform:translateY(-3px)}
+.pricing-foot{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.pf-item{border:1px solid var(--line);padding:24px 22px}
+.pf-item .pf-lbl{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px}
+.pf-item .pf-val{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;font-size:1.8rem;line-height:.9}
+@media (max-width:880px){.pricing{grid-template-columns:1fr}.pricing-foot{grid-template-columns:1fr 1fr}}
+
+/* FAQ */
+.faq{border-top:1px solid var(--line)}
+.faq-item{display:grid;grid-template-columns:5fr 7fr;gap:40px;padding:32px 8px;border-bottom:1px solid var(--line);transition:background .3s}
+.faq-item:hover{background:var(--bg-elev)}
+.faq-q{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.45rem;line-height:1;color:var(--ink)}
+.faq-q .n{color:var(--acc1);margin-right:10px}
+.faq-a{font-size:.98rem;color:var(--ink-dim);line-height:1.7}
+.faq-a b{color:var(--ink);font-weight:500}
+@media (max-width:780px){.faq-item{grid-template-columns:1fr;gap:14px}}
+
+/* CTA / FOOTER */
+.footer{padding:90px 28px 60px}
+.footer-inner{max-width:1400px;margin:0 auto}
+.footer-mega{font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.6rem,7vw,6rem);line-height:.86;letter-spacing:-.02em;margin-bottom:30px}
+.footer-mega .lit{color:var(--acc1)}
+.footer-cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.fbtn{display:inline-block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;font-size:1.2rem;padding:18px 32px;text-decoration:none;letter-spacing:.01em;transition:transform .3s}
+.fbtn-primary{background:var(--acc1);color:#000}
+.fbtn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.fbtn:hover{transform:translateY(-3px)}
+.footer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;border-top:1px solid var(--line);padding-top:40px}
+.f-col h4{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px}
+.f-col p,.f-col a{font-size:.92rem;color:var(--ink);text-decoration:none;line-height:1.7;display:block}
+.f-col a:hover{color:var(--acc1)}
+.footer-legal{margin-top:50px;font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--ink-dim);letter-spacing:.08em;line-height:1.8}
+@media (max-width:780px){.footer-grid{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion:reduce){
+  .mq-track{animation:none}
+  .r,.r-scale{transition:none;opacity:1;transform:none}
+  .pulse-dot{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 00 TOP BAR -->
+<div class="topbar">
+  <span class="t-label">LPP Media Influence</span>
+  <span class="t-label pulse"><span class="pulse-dot"></span>Propuesta de Alianza · Confidencial</span>
+</div>
+
+<!-- 01 HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-split">
+    <div class="hero-left">
+      <div class="hero-tag-block r-scale">⚡ Propuesta de alianza · Para Los CT Records</div>
+      <h1 class="hero-name r">LA <span class="lit">CAPA</span><br>QUE FALTA</h1>
+      <p class="hero-thesis r">Vimos el plan de <b>Compa Primo</b>. Es un lanzamiento bien armado: audio en TikTok, photobooth de Apple Music, party con Spotify, pauta post-release. Pero tiene fecha de inicio y fecha de cierre. <b>Después del 10 de junio, ¿qué pasa con Nueva H? ¿Con Ganggy? ¿Con el resto del roster los otros 11 meses del año?</b> Ahí es exactamente donde entramos — no a reemplazar lo que ya hacen, sino a ocupar la capa que nadie está cubriendo.</p>
+      <div class="hero-stats r">
+        <div class="hero-stat"><div class="hero-stat-num">Alianza</div><div class="hero-stat-lbl">Modelo</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">6 meses</div><div class="hero-stat-lbl">Compromiso</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">$10K</div><div class="hero-stat-lbl">Tier recomendado</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">Artista</div><div class="hero-stat-lbl">Capa de desarrollo</div></div>
+      </div>
+    </div>
+    <div class="hero-right r-scale">
+      <div class="ledger">
+        <div class="ledger-card them">
+          <div class="ledger-lbl">Equipo Compa Primo</div>
+          <div class="ledger-val">La canción</div>
+          <div class="ledger-meta">17 días de campaña · 1 release</div>
+        </div>
+        <div class="ledger-vs">VS</div>
+        <div class="ledger-card us">
+          <div class="ledger-lbl">LPP Media Influence</div>
+          <div class="ledger-val">La marca</div>
+          <div class="ledger-meta">365 días · todo el artista</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 MARQUEE 1 -->
+<div class="marquee acc1" aria-hidden="true">
+  <div class="mq-track">
+    <b>USTEDES LANZAN LA CANCIÓN</b><span>·</span>NOSOTROS CONSTRUIMOS LA MARCA<span>·</span>DOS OPERACIONES<span>·</span>UN MISMO ROSTER<span>·</span>
+    <b>USTEDES LANZAN LA CANCIÓN</b><span>·</span>NOSOTROS CONSTRUIMOS LA MARCA<span>·</span>DOS OPERACIONES<span>·</span>UN MISMO ROSTER<span>·</span>
+  </div>
+</div>
+
+<!-- 03 EL CONTEXTO -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">01 / El Contexto</span>
+    <h2 class="sec-title">Lo que ya <i>está pasando</i></h2>
+  </div>
+  <p class="sec-intro r">Compa Primo es el caso modelo de cómo Los CT lanza una canción: una campaña de 4 fases que arranca el 25 de mayo y cierra el 10 de junio. Está bien planeado — y por eso mismo deja clarísimo <b>cuál es el oficio del equipo actual</b> y dónde se necesita una segunda mano.</p>
+  <div class="numbers r">
+    <div class="num-cell">
+      <div class="num-big">17<span class="u"> días</span></div>
+      <div class="num-lbl">Duración campaña Compa Primo</div>
+      <div class="num-sub">Del 25 de mayo al 10 de junio.</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-big">4<span class="u"> fases</span></div>
+      <div class="num-lbl">Audio · Creadores · Evento · Pauta</div>
+      <div class="num-sub">TikTok seeding, photobooth, party, ads.</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-big">2<span class="u"> art.</span></div>
+      <div class="num-lbl">Nueva H + Gabito Ballesteros</div>
+      <div class="num-sub">Enfocado en un solo release del catálogo.</div>
+    </div>
+    <div class="num-cell">
+      <div class="num-big">348<span class="u"> días</span></div>
+      <div class="num-lbl">Lo que sobra del año</div>
+      <div class="num-sub">Sin sistema continuo que sostenga al artista.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 DIAGNOSTIC -->
+<section class="sec">
+  <div class="diag">
+    <div class="diag-big r">
+      Ellos operan <span class="a1">la canción.</span> Nadie está construyendo <span class="a2">la marca.</span>
+    </div>
+    <div class="diag-body r">
+      <p>El equipo de Compa Primo hace bien su trabajo: activaciones físicas premium con Apple Music y Spotify, creadores ya identificados, pauta de canción, push de DSP. Es <em>marketing de lanzamiento</em>, y se nota el músculo.</p>
+      <p>Pero un lanzamiento es un evento de 17 días. <b>La marca del artista vive los 365.</b> Entre release y release, la cuenta se enfría, los oyentes nuevos no se convierten en seguidores propios, y el próximo single vuelve a partir casi de cero. Esa capa — la del desarrollo continuo del artista — hoy no existe en la operación.</p>
+      <p>Y es la más cara de no tener. <b>Cada oyente que escucha y no te sigue es un boleto, una camiseta y un stream del próximo disco que se está fugando.</b> Nuestro trabajo no es lanzar la canción. Es quedarnos con la gente que la canción atrae.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 MARQUEE 2 -->
+<div class="marquee acc2" aria-hidden="true">
+  <div class="mq-track">
+    <b>LANZAR ≠ CONSTRUIR</b><span>·</span>EL EVENTO DURA 17 DÍAS<span>·</span>LA MARCA VIVE 365<span>·</span><b>CONVERTIR &gt; CONSEGUIR</b><span>·</span>
+    <b>LANZAR ≠ CONSTRUIR</b><span>·</span>EL EVENTO DURA 17 DÍAS<span>·</span>LA MARCA VIVE 365<span>·</span><b>CONVERTIR &gt; CONSEGUIR</b><span>·</span>
+  </div>
+</div>
+
+<!-- 06 DOS OPERACIONES -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">02 / Dos Operaciones</span>
+    <h2 class="sec-title">Dónde <i>encajamos</i></h2>
+  </div>
+  <p class="sec-intro r">No venimos a quitarle trabajo a nadie. Venimos a ocupar la capa que falta — la que no debería estar dividiéndose la cabeza un equipo de lanzamiento en paralelo a una campaña. <b>Dos operaciones distintas, un mismo roster.</b></p>
+  <div class="sw r">
+    <div class="sw-col sw-them">
+      <div class="sw-kicker">Equipo Compa Primo</div>
+      <div class="sw-head">Lanzamiento de canción</div>
+      <div class="sw-item"><span class="g">·</span><span><b>Activaciones físicas</b>Photobooth Apple Music en Antara. Compa Primo Party en Faro Cosmos. Brand partnerships premium.</span></div>
+      <div class="sw-item"><span class="g">·</span><span><b>Audio seeding en TikTok</b>Liberar el audio antes del release y dejar que creadores y fans lo usen.</span></div>
+      <div class="sw-item"><span class="g">·</span><span><b>Plan de creadores</b>Karen Torres, Fer Duran, Alex Gootz, Brayan Paik — voces ya mapeadas para amplificar.</span></div>
+      <div class="sw-item"><span class="g">·</span><span><b>Pauta de canción</b>TikTok Ads y YouTube Ads para empujar el audio y el video oficial.</span></div>
+      <div class="sw-item"><span class="g">·</span><span><b>Cobertura DSP</b>Push editorial en Spotify y Apple Music. Conexión directa con plataformas.</span></div>
+    </div>
+    <div class="sw-col sw-us">
+      <div class="sw-kicker">LPP Media Influence</div>
+      <div class="sw-head">Desarrollo de artista</div>
+      <div class="sw-item"><span class="g">+</span><span><b>Marca del artista, no del single</b>Sistema visual y narrativa que vive entre canciones. Que el próximo release ya tenga audiencia esperándolo.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Conversión oyente → seguidor</b>Los millones que escuchan en Spotify pero no siguen en redes son la fuga más cara del catálogo.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Sistema de contenido continuo</b>Calendario semanal operado en las cuentas propias del artista. Cero semanas muertas.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Fan-as-Lead — base propia</b>Captura de email/teléfono, CRM de fans y broadcast directo. Audiencia que no depende del algoritmo.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Coaching de marca al artista</b>Sesiones mensuales: qué postear, cómo pensar, cómo construir el "yo" más allá de la canción.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Red propia de influencers</b>Traemos nuestros propios creadores a la mesa: campañas de influencer con relaciones que ya tenemos, no solo los del sello.</span></div>
+      <div class="sw-item"><span class="g">+</span><span><b>Validación + tienda + comunidad</b>Wikipedia, EPK, sitio oficial, e-commerce de merch y canal de superfans.</span></div>
+    </div>
+  </div>
+  <div class="banner r">
+    <div class="banner-kicker">Cómo se ve junto</div>
+    <div class="banner-text">Compa Primo lanza el single. <span class="lit">LPP convierte cada stream en un fan en la base.</span> El próximo release ya no parte de cero.</div>
+  </div>
+</section>
+
+<!-- 07 MARQUEE 3 -->
+<div class="marquee acc1" aria-hidden="true">
+  <div class="mq-track">
+    <b>8 PILARES</b><span>·</span>UNA OPERACIÓN, NO UN FAVOR<span>·</span>POR ARTISTA O POR ROSTER<span>·</span><b>DE OYENTE A FAN, DE FAN A INGRESO</b><span>·</span>
+    <b>8 PILARES</b><span>·</span>UNA OPERACIÓN, NO UN FAVOR<span>·</span>POR ARTISTA O POR ROSTER<span>·</span><b>DE OYENTE A FAN, DE FAN A INGRESO</b><span>·</span>
+  </div>
+</div>
+
+<!-- 08 PILARES -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">03 / Nuestra Capa</span>
+    <h2 class="sec-title">Los <i>8 pilares</i></h2>
+  </div>
+  <p class="sec-intro r">Esto es lo que entregamos cada mes por artista. No es "vamos a ver qué hacemos" — es un sistema con procesos, plantillas y métricas. <b>Una operación, no un favor.</b></p>
+  <div class="pillars r">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-title">Marca del artista</div>
+      <div class="pillar-body">Sistema visual consistente entre canciones: tipografía, color, código, plantillas para feed, reels, covers y merch. Que se reconozca antes de leer el nombre.</div>
+      <div class="pillar-tag">Brand · Mes 1–2</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-title">Oyente → seguidor</div>
+      <div class="pillar-body">Campaña para empujar a los oyentes mensuales hacia las redes propias. Cada stream con ruta clara a "seguir" y "guardar". Métrica única, semanal.</div>
+      <div class="pillar-tag">Growth · Continuo</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-title">Contenido semanal</div>
+      <div class="pillar-body">Calendario editorial operado por nosotros en las cuentas del artista: 3–5 piezas por semana entre IG, TikTok y Shorts. Repurposing cruzado.</div>
+      <div class="pillar-tag">Operativo · Recurrente</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">04</div>
+      <div class="pillar-title">Fan-as-Lead</div>
+      <div class="pillar-body">Landing pages por artista y por release. Captura de email/teléfono. CRM segmentado por geo, ciudad y tier de fan. Broadcast directo de drops.</div>
+      <div class="pillar-tag">Owned · Diferenciador</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">05</div>
+      <div class="pillar-title">Coaching al artista</div>
+      <div class="pillar-body">Sesiones 1-on-1 mensuales con cada artista. Qué postear, cómo pensar, cómo construir marca personal en 2026. No solo operamos — coachamos.</div>
+      <div class="pillar-tag">Estrategia · Mensual</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">06</div>
+      <div class="pillar-title">Wikipedia · EPK · web</div>
+      <div class="pillar-body">Página de Wikipedia con editores, EPK profesional para prensa y marcas, sitio oficial que concentra música, fechas, tienda y prensa.</div>
+      <div class="pillar-tag">SEO · Validación</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">07</div>
+      <div class="pillar-title">Tienda + comunidad</div>
+      <div class="pillar-body">E-commerce de merch del artista (no solo del evento), canal de superfans en Telegram con drops, snippets y primicias. Ingreso directo del fan.</div>
+      <div class="pillar-tag">Ingresos · Mes 4+</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">08</div>
+      <div class="pillar-title">Tráfico cruzado</div>
+      <div class="pillar-body">Apalancar audiencias entre artistas del roster: takeovers, contenido conjunto, difusión cruzada, calendario coordinado de drops.</div>
+      <div class="pillar-tag">Apalancamiento · Continuo</div>
+    </div>
+  </div>
+  <div class="banner r">
+    <div class="banner-kicker">Y algo que traemos a la mesa</div>
+    <div class="banner-text">Nuestra <span class="lit">red propia de influencers.</span> No solo gestionamos creadores — tenemos relaciones con muy buenos, listos para campañas de influencer del roster.</div>
+  </div>
+</section>
+
+<!-- 09 FAN AS LEAD -->
+<section class="sec elev">
+  <div class="sec-inner">
+    <div class="sec-head r">
+      <span class="sec-num">04 / Lo Nuevo</span>
+      <h2 class="sec-title">Fan-as-<i>Lead</i></h2>
+    </div>
+    <p class="sec-intro r">Esta es la pieza que no aparece en ningún plan de marketing tradicional de la industria. Es la que separa un artista que <i>renta plataforma</i> de uno que <b>posee audiencia</b>. La importamos del performance marketing y la adaptamos a música.</p>
+    <div class="flow r">
+      <div class="flow-step">
+        <div class="flow-n">01</div>
+        <div class="flow-title">Stream</div>
+        <div class="flow-body">Oyente descubre la canción en Spotify, Apple, TikTok o YouTube.</div>
+        <div class="flow-arrow"></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-n">02</div>
+        <div class="flow-title">Landing</div>
+        <div class="flow-body">Link en bio + smart link llevan a una página dedicada del release con valor real.</div>
+        <div class="flow-arrow"></div>
+      </div>
+      <div class="flow-step hot">
+        <div class="flow-n">03</div>
+        <div class="flow-title">Captura</div>
+        <div class="flow-body">Email + teléfono a cambio de pre-save, snippet exclusivo o entrada al sorteo.</div>
+        <div class="flow-arrow"></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-n">04</div>
+        <div class="flow-title">CRM</div>
+        <div class="flow-body">Base segmentada por ciudad, fan tier, historial de drops y consumo cruzado.</div>
+        <div class="flow-arrow"></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-n">05</div>
+        <div class="flow-title">Broadcast</div>
+        <div class="flow-body">El próximo drop sale con la primera ola de streams ya garantizada. El algoritmo no controla.</div>
+      </div>
+    </div>
+    <div class="flow-note r">
+      <p><b>Por qué importa.</b> Todo artista en Interscope, Sony o cualquier major sigue dependiendo del algoritmo de TikTok y Spotify para llegar a su propia audiencia. Con este sistema, el roster de Los CT empieza a tener <b>una base de fans real que le pertenece</b> — sin importar qué plataforma esté de moda. Se traduce en streams garantizados desde el día uno de cada release, costo por adquisición de fan a la baja, y datos que valen oro ante prensa, marcas y promotores.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 COACHING -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">05 / Coaching</span>
+    <h2 class="sec-title">No solo operamos. <i>Coachamos</i></h2>
+  </div>
+  <div class="coach">
+    <div class="coach-left r">
+      <div class="coach-big">El artista de <span class="lit">2026</span> no se construye en el feed del sello — se construye en la cabeza del artista.</div>
+      <div class="coach-body">
+        <p>Estamos en una era donde un artista vale por <b>su marca personal</b>, no solo por su catálogo. Los fans no siguen canciones: siguen mundos. Y construir mundo es un oficio que pocos artistas aprenden en el camino.</p>
+        <p>Cada artista del roster recibe <b>sesiones mensuales de coaching de marca</b> con nuestro equipo. Trabajamos contenido, contexto, narrativa, cómo pensar el feed, cómo usar TikTok, qué decir y qué callar, y cómo posicionarse para los próximos 5 años — no para los próximos 5 meses.</p>
+        <p>Esto es justo lo que un equipo de lanzamiento de canción no debería estar haciendo. Y nosotros sí.</p>
+      </div>
+    </div>
+    <div class="coach-list r">
+      <div class="coach-list-head">Lo que cubrimos cada mes</div>
+      <ul>
+        <li>Auditoría del feed del artista de las últimas 4 semanas</li>
+        <li>Brief de contenido para los siguientes 30 días</li>
+        <li>Coaching de posicionamiento personal y narrativa</li>
+        <li>Plantillas de respuesta para haters, DM y prensa</li>
+        <li>Estrategia de TikTok específica al sonido del artista</li>
+        <li>Lectura de métricas en lenguaje claro: qué importa y qué no</li>
+        <li>Ideas de colaboración dentro y fuera del roster</li>
+        <li>Calendario editorial alineado al calendario de drops</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 11 MARQUEE 4 -->
+<div class="marquee acc2" aria-hidden="true">
+  <div class="mq-track">
+    <b>EMPIEZA CON UN ARTISTA</b><span>·</span>ESCALA AL ROSTER<span>·</span>DIAGNÓSTICO SIN COSTO<span>·</span><b>EL MODELO SE ADAPTA A CUALQUIER ARTISTA</b><span>·</span>
+    <b>EMPIEZA CON UN ARTISTA</b><span>·</span>ESCALA AL ROSTER<span>·</span>DIAGNÓSTICO SIN COSTO<span>·</span><b>EL MODELO SE ADAPTA A CUALQUIER ARTISTA</b><span>·</span>
+  </div>
+</div>
+
+<!-- 12 ROSTER -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">06 / Roster Potencial</span>
+    <h2 class="sec-title">A quién <i>operamos</i></h2>
+  </div>
+  <p class="sec-intro r">La propuesta funciona por artista. Pueden empezar con uno como prueba, o activar 2–3 simultáneos con tarifa de roster. <b>Estos son los candidatos naturales</b> — pero el modelo se adapta a cualquier artista del sello.</p>
+  <div class="roster r">
+    <div class="roster-card">
+      <div class="roster-name">Ganggy</div>
+      <div class="roster-tag">Hermosillo · Corridos × House</div>
+      <div class="roster-stats"><span>3.3M oyentes</span><span>90K IG</span><span>148M streams</span></div>
+      <div class="roster-desc">Catálogo probado, presencia digital sub-construida. El caso de fuga oyente→fan más obvio del roster. La propuesta original sigue en pie.</div>
+    </div>
+    <div class="roster-card">
+      <div class="roster-name">Nueva H</div>
+      <div class="roster-tag">Con Compa Primo en lanzamiento</div>
+      <div class="roster-stats"><span>Era nueva</span><span>Compa Primo</span><span>Álbum 2026</span></div>
+      <div class="roster-desc">Compa Primo es el header. Lo que sigue es el álbum. Es exactamente el artista que necesita la capa de marca lista para sostener el calendario.</div>
+    </div>
+    <div class="roster-card">
+      <div class="roster-name">El Roster</div>
+      <div class="roster-tag">Bajo demanda</div>
+      <div class="roster-stats"><span>Por evaluar</span><span>Tarifa roster</span></div>
+      <div class="roster-desc">Cualquier artista del sello entra al modelo. Hacemos un diagnóstico previo de 1 semana sin costo para confirmar si tiene sentido o si está mejor en otra capa.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 ROADMAP -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">07 / Hoja de Ruta</span>
+    <h2 class="sec-title">Cómo se ven los <i>6 meses</i></h2>
+  </div>
+  <p class="sec-intro r">No hay magia mes uno — hay diagnóstico, infraestructura y primera ola. El crecimiento real empieza en mes 3, los ingresos directos en mes 4–5. <b>Reportes mensuales con métricas, no con vanity.</b></p>
+  <div class="roadmap r">
+    <div class="phase">
+      <div class="phase-num">01</div>
+      <div class="phase-title">Fundación</div>
+      <div class="phase-window">Mes 1–2 · Infraestructura</div>
+      <ul class="phase-list">
+        <li>Auditoría de marca y plataformas del artista</li>
+        <li>Sistema visual y plantillas operativas</li>
+        <li>Calendario editorial cargado a 90 días</li>
+        <li>Landing pages + CRM en producción</li>
+        <li>EPK y Wikipedia en arranque</li>
+        <li>Primera sesión de coaching con el artista</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num">02</div>
+      <div class="phase-title">Acelera</div>
+      <div class="phase-window">Mes 3–4 · Tracción</div>
+      <ul class="phase-list">
+        <li>Campaña activa oyente → seguidor</li>
+        <li>Pauta en Meta y TikTok orientada a marca</li>
+        <li>Primer release operado como evento integral</li>
+        <li>Primera ola de fans capturados en CRM</li>
+        <li>Coordinación con el equipo de Compa Primo</li>
+        <li>Reporte cuantitativo de transición de métricas</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num">03</div>
+      <div class="phase-title">Consolida</div>
+      <div class="phase-window">Mes 5–6 · Consolidación</div>
+      <ul class="phase-list">
+        <li>Tienda online live, primer ciclo de merch</li>
+        <li>Comunidad de superfans operando</li>
+        <li>Wikipedia publicada y ronda de prensa cerrada</li>
+        <li>CRM con base relevante y segmentada</li>
+        <li>Métricas de fanbase propio en alza sostenida</li>
+        <li>Plan de renovación o escala a más artistas</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 14 MARQUEE 5 (pricing teaser) -->
+<div class="marquee acc1" aria-hidden="true">
+  <div class="mq-track">
+    <b>TRES NIVELES</b><span>·</span>UNA SOLA OPERACIÓN<span>·</span><b>$6K · $10K · $15K / MES</b><span>·</span>6 MESES MÍNIMO<span>·</span>ESCALA A TU RITMO<span>·</span>
+    <b>TRES NIVELES</b><span>·</span>UNA SOLA OPERACIÓN<span>·</span><b>$6K · $10K · $15K / MES</b><span>·</span>6 MESES MÍNIMO<span>·</span>ESCALA A TU RITMO<span>·</span>
+  </div>
+</div>
+
+<!-- 15 PRICING -->
+<section class="sec">
+  <div class="sec-head r">
+    <span class="sec-num">08 / Inversión</span>
+    <h2 class="sec-title">Tres niveles. <i>Una operación</i></h2>
+  </div>
+  <p class="sec-intro r">Sin paquetes escondidos. Sin costos por entregable. Los tres tiers viven dentro del mismo modelo de capa de desarrollo de artista — la diferencia está en profundidad de operación y velocidad de escala. <b>Facturación en USD, mes a mes, contrato a 6 meses.</b></p>
+  <div class="pricing r">
+
+    <div class="tier">
+      <div class="tier-lvl">01 · Esencial</div>
+      <div class="tier-name">Fundación</div>
+      <div class="tier-sub">La capa de desarrollo base. Un artista, sistema completo, sin pauta.</div>
+      <div class="tier-amt"><span class="pre">$</span>6,000<span class="per">USD / mes</span></div>
+      <ul class="tier-inc">
+        <li><span class="p">+</span>Estrategia y dirección de marca dedicada</li>
+        <li><span class="p">+</span>Sistema de contenido para IG, TikTok y Shorts</li>
+        <li><span class="p">+</span>Campaña de conversión oyente → seguidor</li>
+        <li><span class="p">+</span>Fan-as-Lead: landing pages + CRM base</li>
+        <li><span class="p">+</span>EPK, Wikipedia y sitio oficial</li>
+        <li><span class="p">+</span>Sistema visual y diseño de marca</li>
+        <li><span class="p">+</span>1 sesión mensual de coaching con el artista</li>
+        <li><span class="p">+</span>Reporte mensual de métricas reales</li>
+      </ul>
+      <a href="#contacto" class="tier-cta">Activar Esencial →</a>
+    </div>
+
+    <div class="tier feat">
+      <div class="tier-badge">Recomendado</div>
+      <div class="tier-lvl">02 · Crecimiento</div>
+      <div class="tier-name">Acelera</div>
+      <div class="tier-sub">Esencial + pauta operada + influencers + coaching expandido. El sweet spot.</div>
+      <div class="tier-amt"><span class="pre">$</span>10,000<span class="per">USD / mes</span></div>
+      <ul class="tier-inc">
+        <li><span class="p">+</span>Todo lo del Esencial</li>
+        <li><span class="p">+</span>Meta Ads (FB + IG) orientada a marca</li>
+        <li><span class="p">+</span>Campañas de influencer con red propia de LPP</li>
+        <li><span class="p">+</span>Creatividades pagas y testing de hooks semanal</li>
+        <li><span class="p">+</span>CRM avanzado con segmentación geo + tier</li>
+        <li><span class="p">+</span>2 sesiones mensuales de coaching</li>
+        <li><span class="p">+</span>Tienda y merch online (mes 4+)</li>
+        <li><span class="p">+</span>Reporte de pauta y ROAS por campaña</li>
+      </ul>
+      <a href="#contacto" class="tier-cta">Activar Crecimiento →</a>
+    </div>
+
+    <div class="tier">
+      <div class="tier-lvl">03 · Élite 360°</div>
+      <div class="tier-name">Escala</div>
+      <div class="tier-sub">Operación 360° con equipo físico en piso. Solo artistas prioritarios.</div>
+      <div class="tier-amt"><span class="pre">$</span>15,000<span class="per">USD / mes</span></div>
+      <ul class="tier-inc">
+        <li><span class="p">+</span>Todo lo del Crecimiento</li>
+        <li><span class="p">+</span>1 día/mes de contenido físico con equipo en piso</li>
+        <li><span class="p">+</span>Styling y dirección de arte presencial</li>
+        <li><span class="p">+</span>Equipo de ads dedicado (estratega + media buyer)</li>
+        <li><span class="p">+</span>Publicista dedicado y ronda de prensa nacional</li>
+        <li><span class="p">+</span>Pauta escalada en Meta, TikTok y YouTube</li>
+        <li><span class="p">+</span>Comunidad de superfans + activaciones</li>
+        <li><span class="p">+</span>Acompañamiento ejecutivo directo con el sello</li>
+      </ul>
+      <a href="#contacto" class="tier-cta">Aplicar a Élite →</a>
+    </div>
+
+  </div>
+  <div class="pricing-foot r">
+    <div class="pf-item"><div class="pf-lbl">Compromiso</div><div class="pf-val">6 meses</div></div>
+    <div class="pf-item"><div class="pf-lbl">Aviso de cancelación</div><div class="pf-val">30 días</div></div>
+    <div class="pf-item"><div class="pf-lbl">Setup inicial</div><div class="pf-val">$0</div></div>
+    <div class="pf-item"><div class="pf-lbl">Moneda</div><div class="pf-val">USD</div></div>
+  </div>
+</section>
+
+<!-- 16 FAQ -->
+<section class="sec elev">
+  <div class="sec-inner">
+    <div class="sec-head r">
+      <span class="sec-num">09 / Preguntas</span>
+      <h2 class="sec-title">Sin <i>rodeos</i></h2>
+    </div>
+    <div class="faq r">
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">01</span>¿Esto choca con el equipo de Compa Primo?</div>
+        <div class="faq-a">No. Son operaciones distintas con calendarios distintos. <b>Compa Primo opera la canción</b> (3 semanas de campaña con fecha de cierre). <b>LPP opera al artista</b> (sistema continuo de 6+ meses). Nuestro mejor escenario es coordinar handoff con ellos en cada release: ellos amplifican, nosotros capturamos al fan que llega y lo metemos al sistema propio.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">02</span>¿En cuánto se ven resultados?</div>
+        <div class="faq-a">Mes 1–2 es infraestructura — se construye la maquinaria, no se ven números. <b>Mes 3–4 hay tracción medible</b>: crecimiento de seguidores en cuentas propias, primera base de CRM, primer release dentro del nuevo sistema. <b>Mes 5–6 hay ingreso directo del fan</b> y métricas de retención que cualquier sello puede defender ante prensa y plataformas.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">03</span>¿Y si no funciona?</div>
+        <div class="faq-a">Contrato a 6 meses con aviso de 30 días después de eso. <b>Si en el reporte de mes 3 no hay señales claras de crecimiento, lo discutimos sin drama.</b> No vendemos magia — vendemos un sistema. Si el sistema no aplica al artista, lo decimos antes de que lo veas en el reporte.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">04</span>¿Por qué $10K y no más barato?</div>
+        <div class="faq-a">Porque opera un equipo dedicado al artista, no un freelance con otros cinco clientes en paralelo. Incluye pauta operada (no solo "estrategia"), coaching directo con el artista (no solo "consultoría") y CRM real (no solo "social media"). <b>Comparado con lo que cuesta un lanzamiento de canción aislado, $10K/mes de operación continua es la inversión más eficiente</b> en un roster activo.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">05</span>¿Trabajan con otros sellos?</div>
+        <div class="faq-a">Trabajamos con varios artistas en el espacio latino. <b>Pero firmamos exclusividad por género</b> dentro de Los CT: si nos contratan para corridos tumbados, no tomamos a otro artista directamente competidor mientras dure el contrato. La lealtad la cobramos en el modelo, no en el discurso.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="n">06</span>¿Quién es nuestro contacto?</div>
+        <div class="faq-a">Un punto de contacto único por nuestro lado (lead estratega) y un canal compartido con el equipo del sello que ustedes designen. <b>Reunión semanal de 30 min</b> para tracción operativa y <b>reunión mensual de 90 min</b> con el CEO o director de marketing para reporte ejecutivo y planeación.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 FOOTER / CTA -->
+<footer class="footer" id="contacto">
+  <div class="footer-inner">
+    <div class="footer-mega r">Empecemos con<br><span class="lit">un artista.</span><br>Veámoslo en 90 días.</div>
+    <div class="footer-cta-row r">
+      <a class="fbtn fbtn-primary" href="https://wa.me/15555555555?text=Quiero%20hablar%20de%20la%20propuesta%20LPP%20%C3%97%20Los%20CT">Hablar por WhatsApp →</a>
+      <a class="fbtn fbtn-ghost" href="mailto:hola@lppmedia.com?subject=LPP%20%C3%97%20Los%20CT%20%E2%80%94%20Alianza">Escribir por correo</a>
+    </div>
+    <div class="footer-grid">
+      <div class="f-col">
+        <h4>Agencia</h4>
+        <p>LPP Media Influence</p>
+        <p>Vanta Agency</p>
+      </div>
+      <div class="f-col">
+        <h4>Contacto</h4>
+        <a href="mailto:hola@lppmedia.com">hola@lppmedia.com</a>
+        <a href="https://wa.me/15555555555">WhatsApp directo</a>
+        <a href="https://lppmediainfluence.com" target="_blank" rel="noopener">lppmediainfluence.com</a>
+      </div>
+      <div class="f-col">
+        <h4>Referencias</h4>
+        <a href="https://ganggy.vercel.app" target="_blank" rel="noopener">Propuesta Ganggy</a>
+        <p>Casos Vanta Agency</p>
+        <p>Roster activo</p>
+      </div>
+      <div class="f-col">
+        <h4>Propuesta</h4>
+        <p>Alianza LPP × Los CT</p>
+        <p>Retainer 6 meses</p>
+        <p>$6K · $10K · $15K / mes</p>
+      </div>
+    </div>
+    <div class="footer-legal">
+      Documento confidencial preparado por LPP Media Influence — Vanta Agency para Los CT Records · Mayo 2026 · Datos del plan Compa Primo y del análisis Ganggy referenciados al momento de la elaboración · Las cifras de streaming y seguidores fluctúan.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.r,.r-scale').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
